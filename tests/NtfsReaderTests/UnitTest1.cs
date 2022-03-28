@@ -81,5 +81,59 @@ namespace NtfsReaderTests
 				)
 			);
 		}
+
+		[TestMethod]
+		public void NtfsReader_EnumerateAllNodes()
+		{
+			DriveInfo driveInfo = new DriveInfo("C:\\");
+
+
+			var ntfsReader = new NtfsReader(driveInfo, RetrieveMode.Minimal);
+
+			var initialMemory = System.GC.GetTotalMemory(true);
+
+			foreach (var node in ntfsReader.EnumerateAllNodes())
+			{
+				Assert.IsNotNull(node);
+			}
+
+			var finalMemory = System.GC.GetTotalMemory(true);
+
+			var consumption = finalMemory - initialMemory;
+
+			Trace.WriteLine(
+				string.Format(
+					"Memory Used: {0}",
+					consumption / 1e+6
+				)
+			);
+		}
+
+		[TestMethod]
+		public void NtfsReader_GetAllNodes()
+		{
+			DriveInfo driveInfo = new DriveInfo("C:\\");
+
+
+			var ntfsReader = new NtfsReader(driveInfo, RetrieveMode.Minimal);
+
+			var initialMemory = System.GC.GetTotalMemory(true);
+
+			foreach (var node in ntfsReader.GetAllNodes())
+			{
+				Assert.IsNotNull(node);
+			}
+
+			var finalMemory = System.GC.GetTotalMemory(true);
+
+			var consumption = finalMemory - initialMemory;
+
+			Trace.WriteLine(
+				string.Format(
+					"Memory Used: {0}",
+					consumption / 1e+6
+				)
+			);
+		}
 	}
 }

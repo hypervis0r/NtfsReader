@@ -111,49 +111,49 @@ namespace System.IO.Filesystem.Ntfs
 			List<INode> nodes = new List<INode>();
 
 			/*
-				If the rootPath is equal to the root directory of the drive,
-				we can avoid running string comparisons on every node.
-
 				TODO: use Parallel.Net to process this when it becomes available
 			*/
-			if (String.Compare(rootPath, _driveInfo.Name) == 0)
-			{
-				UInt32 nodeCount = (UInt32)_nodes.Length;
-				for (UInt32 i = 0; i < nodeCount; ++i)
-					if (_nodes[i].NameIndex != 0)
-						nodes.Add(new NodeWrapper(this, i, _nodes[i]));
-			}
-			else
-			{
-				UInt32 nodeCount = (UInt32)_nodes.Length;
-				for (UInt32 i = 0; i < nodeCount; ++i)
-					if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
-						nodes.Add(new NodeWrapper(this, i, _nodes[i]));
-			}
+			UInt32 nodeCount = (UInt32)_nodes.Length;
+			for (UInt32 i = 0; i < nodeCount; ++i)
+				if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
+					nodes.Add(new NodeWrapper(this, i, _nodes[i]));
+
+			return nodes;
+		}
+
+		public List<INode> GetAllNodes()
+		{
+			List<INode> nodes = new List<INode>();
+
+			/*
+				TODO: use Parallel.Net to process this when it becomes available
+			*/
+			UInt32 nodeCount = (UInt32)_nodes.Length;
+			for (UInt32 i = 0; i < nodeCount; ++i)
+				if (_nodes[i].NameIndex != 0)
+					nodes.Add(new NodeWrapper(this, i, _nodes[i]));
 
 			return nodes;
 		}
 
 		public IEnumerable<INode> EnumerateNodes(string rootPath)
 		{
+			UInt32 nodeCount = (UInt32)_nodes.Length;
+			for (UInt32 i = 0; i < nodeCount; ++i)
+				if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
+					yield return new NodeWrapper(this, i, _nodes[i]);
+		}
+
+		public IEnumerable<INode> EnumerateAllNodes()
+		{
 			/*
 				If the rootPath is equal to the root directory of the drive,
 				we can avoid running string comparisons on every node.
 			*/
-			if (String.Compare(rootPath, _driveInfo.Name) == 0)
-			{
-				UInt32 nodeCount = (UInt32)_nodes.Length;
-				for (UInt32 i = 0; i < nodeCount; ++i)
-					if (_nodes[i].NameIndex != 0)
-						yield return new NodeWrapper(this, i, _nodes[i]);
-			}
-			else
-			{
-				UInt32 nodeCount = (UInt32)_nodes.Length;
-				for (UInt32 i = 0; i < nodeCount; ++i)
-					if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
-						yield return new NodeWrapper(this, i, _nodes[i]);
-			}
+			UInt32 nodeCount = (UInt32)_nodes.Length;
+			for (UInt32 i = 0; i < nodeCount; ++i)
+				if (_nodes[i].NameIndex != 0)
+					yield return new NodeWrapper(this, i, _nodes[i]);
 		}
 
 		public byte[] GetVolumeBitmap()
