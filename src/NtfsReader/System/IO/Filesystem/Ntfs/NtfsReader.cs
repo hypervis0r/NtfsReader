@@ -579,6 +579,7 @@ namespace System.IO.Filesystem.Ntfs
         StandardInformation[] _standardInformations;
         Stream[][] _streams;
         DriveInfo _driveInfo;
+        string _driveNameTrimmed;
         List<string> _names = new List<string>();
         RetrieveMode _retrieveMode;
         byte[] _bitmapData;

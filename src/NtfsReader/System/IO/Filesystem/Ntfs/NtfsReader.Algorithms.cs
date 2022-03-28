@@ -42,7 +42,7 @@ namespace System.IO.Filesystem.Ntfs
         {
             UInt32 node = nodeIndex;
 
-            Stack<UInt32> fullPathNodes = new Stack<UInt32>();
+            Stack<UInt32> fullPathNodes = new Stack<UInt32>(10);
             fullPathNodes.Push(node);
 
             UInt32 lastNode = node;
@@ -63,8 +63,7 @@ namespace System.IO.Filesystem.Ntfs
                 node = parent;
             }
 
-            StringBuilder fullPath = new StringBuilder();
-            fullPath.Append(_driveInfo.Name.TrimEnd(new char[] { '\\' }));
+            StringBuilder fullPath = new StringBuilder(_driveNameTrimmed);
 
             while (fullPathNodes.Count > 0)
             {
