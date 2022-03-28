@@ -3,7 +3,7 @@
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<PackageId>Hypervis0r.NtfsReader</PackageId>
-		<Version>0.0.4</Version>
+		<Version>0.0.5</Version>
 		<Authors>hypervis0r,Michael Christensen,Danny Couture</Authors>
 		<Company>-</Company>
 		<RepositoryUrl>https://github.com/hypervis0r/NtfsReader</RepositoryUrl>

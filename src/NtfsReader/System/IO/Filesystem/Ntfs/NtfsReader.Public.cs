@@ -30,6 +30,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Linq;
 
 namespace System.IO.Filesystem.Ntfs
 {
@@ -108,52 +109,25 @@ namespace System.IO.Filesystem.Ntfs
 		/// <param name="rootPath">The rootPath must at least contains the drive and may include any number of subdirectories. Wildcards aren't supported.</param>
 		public List<INode> GetNodes(string rootPath)
 		{
-			List<INode> nodes = new List<INode>();
-
-			/*
-				TODO: use Parallel.Net to process this when it becomes available
-			*/
-			UInt32 nodeCount = (UInt32)_nodes.Length;
-			for (UInt32 i = 0; i < nodeCount; ++i)
-				if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
-					nodes.Add(new NodeWrapper(this, i, _nodes[i]));
-
-			return nodes;
+			return new List<INode>(EnumerateNodes(rootPath));
 		}
 
 		public List<INode> GetAllNodes()
 		{
-			List<INode> nodes = new List<INode>();
-
-			/*
-				TODO: use Parallel.Net to process this when it becomes available
-			*/
-			UInt32 nodeCount = (UInt32)_nodes.Length;
-			for (UInt32 i = 0; i < nodeCount; ++i)
-				if (_nodes[i].NameIndex != 0)
-					nodes.Add(new NodeWrapper(this, i, _nodes[i]));
-
-			return nodes;
+			return new List<INode>(EnumerateAllNodes());
 		}
 
 		public IEnumerable<INode> EnumerateNodes(string rootPath)
 		{
-			UInt32 nodeCount = (UInt32)_nodes.Length;
-			for (UInt32 i = 0; i < nodeCount; ++i)
-				if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
-					yield return new NodeWrapper(this, i, _nodes[i]);
+			return _nodes.Where(
+						(n, index) => (n.NameIndex != 0) &&
+						(GetNodeFullNameCore((uint)index).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase)))
+					.Select((n, index) => new NodeWrapper(this, (uint)index, n));
 		}
 
 		public IEnumerable<INode> EnumerateAllNodes()
 		{
-			/*
-				If the rootPath is equal to the root directory of the drive,
-				we can avoid running string comparisons on every node.
-			*/
-			UInt32 nodeCount = (UInt32)_nodes.Length;
-			for (UInt32 i = 0; i < nodeCount; ++i)
-				if (_nodes[i].NameIndex != 0)
-					yield return new NodeWrapper(this, i, _nodes[i]);
+			return _nodes.Where(n => n.NameIndex != 0).Select((n, index) => new NodeWrapper(this, (uint)index, n));
 		}
 
 		public byte[] GetVolumeBitmap()
