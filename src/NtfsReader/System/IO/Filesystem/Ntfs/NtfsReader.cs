@@ -441,12 +441,12 @@ namespace System.IO.Filesystem.Ntfs
                     if (_reader._streams == null)
                         throw new NotSupportedException("The streams haven't been retrieved. Make sure to use the proper RetrieveMode.");
 
-                    Stream[] streams = _reader._streams[_nodeIndex];
+                    List<Stream> streams = _reader._streams[_nodeIndex];
                     if (streams == null)
                         return null;
 
                     List<IStream> newStreams = new List<IStream>();
-                    for (int i = 0; i < streams.Length; ++i)
+                    for (int i = 0; i < streams.Count; ++i)
                         newStreams.Add(new StreamWrapper(_reader, this, i));
 
                     return newStreams;
@@ -577,7 +577,7 @@ namespace System.IO.Filesystem.Ntfs
         DiskInfoWrapper _diskInfo;
         Node[] _nodes;
         StandardInformation[] _standardInformations;
-        Stream[][] _streams;
+        List<Stream>[] _streams;
         DriveInfo _driveInfo;
         string _driveNameTrimmed;
         List<string> _names = new List<string>();
@@ -656,16 +656,6 @@ namespace System.IO.Filesystem.Ntfs
         #endregion
 
         #region File Reading Wrappers
-
-        private unsafe void ReadFile(byte* buffer, int len, UInt64 absolutePosition)
-        {
-            ReadFile(buffer, (UInt64)len, absolutePosition);
-        }
-
-        private unsafe void ReadFile(byte* buffer, UInt32 len, UInt64 absolutePosition)
-        {
-            ReadFile(buffer, (UInt64)len, absolutePosition);
-        }
 
         private unsafe void ReadFile(byte* buffer, UInt64 len, UInt64 absolutePosition)
         {
@@ -753,7 +743,7 @@ namespace System.IO.Filesystem.Ntfs
 
             fixed (byte* ptr = volumeData)
             {
-                ReadFile(ptr, volumeData.Length, 0);
+                ReadFile(ptr, (UInt64)volumeData.Length, 0);
 
                 BootSector* bootSector = (BootSector*)ptr;
 
@@ -1405,7 +1395,7 @@ namespace System.IO.Filesystem.Ntfs
                 }
 
                 if ((_retrieveMode & RetrieveMode.Streams) == RetrieveMode.Streams)
-                    _streams = new Stream[maxInode][];
+                    _streams = new List<Stream>[maxInode];
 
                 /* Read and process all the records in the MFT. The records are read into a
                    buffer and then given one by one to the InterpretMftRecord() subroutine. */
@@ -1464,7 +1454,7 @@ namespace System.IO.Filesystem.Ntfs
                     nodes[nodeIndex] = newNode;
 
                     if (streams != null)
-                        _streams[nodeIndex] = streams.ToArray();
+                        _streams[nodeIndex] = streams;
                 }
 
                 stopwatch.Stop();
