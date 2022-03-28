@@ -2,11 +2,11 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<PackageId>Michaelkc.NtfsReader</PackageId>
-		<Version>0.0.3</Version>
-		<Authors>Michael Christensen</Authors>
+		<PackageId>hypervis0r.NtfsReader</PackageId>
+		<Version>0.0.4</Version>
+		<Authors>hypervis0r</Authors>
 		<Company>-</Company>
-		<RepositoryUrl>https://github.com/michaelkc/NtfsReader</RepositoryUrl>
+		<RepositoryUrl>https://github.com/hypervis0r/NtfsReader</RepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>

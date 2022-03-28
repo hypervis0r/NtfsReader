@@ -131,6 +131,15 @@ namespace System.IO.Filesystem.Ntfs
             return nodes;
         }
 
+        public IEnumerable<INode> EnumerateNodes(string rootPath)
+        {
+            //TODO use Parallel.Net to process this when it becomes available
+            UInt32 nodeCount = (UInt32)_nodes.Length;
+            for (UInt32 i = 0; i < nodeCount; ++i)
+                if (_nodes[i].NameIndex != 0 && GetNodeFullNameCore(i).StartsWith(rootPath, StringComparison.InvariantCultureIgnoreCase))
+                    yield return new NodeWrapper(this, i, _nodes[i]);
+        }
+
         public byte[] GetVolumeBitmap()
         {
             return _bitmapData;
