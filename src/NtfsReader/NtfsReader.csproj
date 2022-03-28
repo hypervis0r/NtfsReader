@@ -1,14 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<PackageId>hypervis0r.NtfsReader</PackageId>
+		<PackageId>Hypervis0r.NtfsReader</PackageId>
 		<Version>0.0.4</Version>
-		<Authors>hypervis0r</Authors>
+		<Authors>hypervis0r,Michael Christensen,Danny Couture</Authors>
 		<Company>-</Company>
 		<RepositoryUrl>https://github.com/hypervis0r/NtfsReader</RepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+	    <PackageTags>ntfs;filesystem</PackageTags>
+	    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 </Project>
